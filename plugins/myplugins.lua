@@ -1,16 +1,16 @@
 local overrides = require("configs.overrides")
 
 local plugins = {
-  {
-    "zbirenbaum/copilot.lua",
-    -- Lazy load when event occurs. Events are triggered
-    -- as mentioned in:
-    -- https://vi.stackexchange.com/a/4495/20389
-    -- event = "InsertEnter",
-    -- Enable startup by uncommenting above and commenting below:
-    lazy = false,
-    opts = overrides.copilot,
-  },
+  -- {
+  --   "zbirenbaum/copilot.lua",
+  --   -- Lazy load when event occurs. Events are triggered
+  --   -- as mentioned in:
+  --   -- https://vi.stackexchange.com/a/4495/20389
+  --   -- event = "InsertEnter",
+  --   -- Enable startup by uncommenting above and commenting below:
+  --   lazy = false,
+  --   opts = overrides.copilot,
+  -- },
   {
     "christoomey/vim-tmux-navigator",
     lazy = false,
