@@ -8,31 +8,37 @@ local lspconfig = require("lspconfig")
 -- multiple different client offset_encodings detected for buffer, this is not supported yet
 capabilities.offsetEncoding = { "utf-16" }
 
-lspconfig.tsserver.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  init_options = {
-    preferences = {
-      disableSuggestions = true,
+local servers = {
+  tsserver = {
+    init_options = {
+      preferences = {
+        disableSuggestions = true,
+      }
     }
-  }
+  },
+  pyright = {
+    filetypes = { "python" }
+  },
+  clangd = {
+    on_attach = function(client, bufnr)
+      client.server_capabilities.signatureHelpProvider = false
+      config.on_attach(client, bufnr)
+    end
+  },
+  html = {
+    filetypes = { "html", "templ" }
+  },
+  stimulus_ls = {}
 }
 
-lspconfig.pyright.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  filetypes = { "python" },
-}
+for name, opts in pairs(servers) do
+  -- Apply common configuration settings
+  opts.on_init = config.on_init
+  -- Only set on_attach if it is not already set in the specific configuration
+  if not opts.on_attach then
+    opts.on_attach = config.on_attach
+  end
+  opts.capabilities = capabilities
 
-lspconfig.clangd.setup {
-  on_attach = function(client, bufnr)
-    client.server_capabilities.signatureHelpProvider = false
-    on_attach(client, bufnr)
-  end,
-  capabilities = capabilities,
-}
-
-lspconfig.intelephense.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
+  lspconfig[name].setup(opts)
+end
